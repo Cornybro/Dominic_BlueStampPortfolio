@@ -55,7 +55,7 @@ For your first milestone, describe what your project is and how you plan to buil
 
 # Retro Arcade Gaming Console
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/y3VAmNlER5Y" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/cbm1Ko4pPN8?si=BsYM3Q0l8w3hW4iN" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 Milestone Description: My project was the Retro Arcade Gaming Console. It came with a PCB with all the software already installed, and what I had to do was solder all the components onto the board and hook up a battery pack to power it. One challenge I faced was that I accidentally bridged the capacitor when soldering it, and I had to use desoldering wick and soldering paste to remove the solder so I could redo the solder. I'm excited to continue on to the intensive project, where I will be creating a Ball Tracking Robot.
 
