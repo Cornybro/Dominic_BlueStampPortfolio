@@ -11,7 +11,7 @@ You should comment out all portions of your portfolio that you have not complete
 |:--:|:--:|:--:|:--:|
 | Dominic R | Mountain View High School | Software Engineering | Incoming Sophomore
 
-![Headstone Image](DominicR.heic)
+![Headstone Image](DominicR.jpg)
 
 Bio: My name is Dominic Reouk. I live in Los Altos and am a rising sophomore at Mountain View High School. My favorite subjects are Math and Science, and the fields I'm interested in are Robotics, AI, and Software Engineering. In the future, I hope to work on robots that venture into space to collect data on otherworldly planets. In my free time, I like to read books, travel, hang out with friends, and play video games.
   
