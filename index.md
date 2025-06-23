@@ -4,11 +4,12 @@ Replace this text with a brief description (2-3 sentences) of your project. This
 -->
 | **Engineer** | **School** | **Area of Interest** | **Grade** |
 |:--:|:--:|:--:|:--:|
-| Dominic R | Mountain View High School | Software Engineering | Incoming Sophomore
+| Dominic R | Mountain View High School | Software Engineering | Incoming Sophomore |
 
 ![Headstone Image](DominicR.jpg)
 
 My name is Dominic Reouk. I live in Los Altos and am a rising sophomore at Mountain View High School. My favorite subjects are Math and Science, and the fields I'm interested in are Robotics, AI, and Software Engineering. In the future, I hope to work on robots that venture into space to collect data on otherworldly planets. In my free time, I like to read books, travel, hang out with friends, and play video games.
+
 <!---
 # Final Milestone
 
@@ -39,7 +40,7 @@ For your second milestone, explain what you've worked on since your previous mil
 # First Milestone: Setting up Raspberry Pi
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/qotKq9lGOao?si=t-YUARO0Oc2g_OL_" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-My project is a ball-tracking robot, which means that it needs some way to receive visual input and take action based on that input. The robot will use ultrasonic sensors to identify where different objects are, a Raspberry Pi paired with a PiCamera to sense the ball's color, and DC Motors so it has a means of moving towards the ball. For my first milestone, I set up my Raspberry Pi with an SSH Key, which is like a passkey to secure, password-free access to your Raspberry Pi. I also connected my PiCamera to the Raspberry Pi and took a successful photo with it using the test code provided by Bluestamp. Although setting up the Raspberry Pi was smooth at first, when I tried filming the first milestone video, the SSH Key failed, and from then on, it hasn't shown sign of being reestablished. However, I plan to solve this problem by directly coding on the Raspberry Pi using a software called OBS Capture instead of connecting to the Pi and coding it remotely. OBS Capture uses an HDMI cable to visualize the Pi as a computer on your laptop screen. Regarding my upcoming milestones, I plan to first assemble the robot with all its necessary components and make sure electrical connections are working proficiently, then I will code the robot to sense the ball's color and track it.
+My project is a ball-tracking robot, which means that it needs some way to receive visual input and take action based on that input. The robot will use ultrasonic sensors to identify where different objects are, a Raspberry Pi paired with a PiCamera to sense the ball's color, and DC Motors so it has a means of moving towards the ball. For my first milestone, I set up my Raspberry Pi with an SSH Key, which is like a passkey to secure, password-free access to your Raspberry Pi. I also connected my PiCamera to the Raspberry Pi and took a successful photo with it using the test code provided by Bluestamp. Although setting up the Raspberry Pi was smooth at first, when I tried filming the first milestone video, the SSH Key failed, and from then on, it hasn't shown sign of being reestablished. However, I plan to solve this problem by directly coding on the Raspberry Pi using a software called OBS Capture instead of connecting to the Pi and coding it remotely. OBS Capture uses an HDMI cable to visualize the Pi as a computer on your laptop screen. Regarding my upcoming milestones, I plan first to assemble the robot with all its necessary components and ensure electrical connections are working proficiently, then I will code the robot to sense the ball's color and track it.
 
 # Retro Arcade Gaming Console
 
