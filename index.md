@@ -6,7 +6,7 @@ Replace this text with a brief description (2-3 sentences) of your project. This
 |:--:|:--:|:--:|:--:|
 | Dominic R | Mountain View High School | Software Engineering | Incoming Sophomore |
 
-![Headstone Image](DominicR.jpg)
+<img src = "DominicR.jpg" width = "300" height = "600">
 
 My name is Dominic Reouk. I live in Los Altos and am a rising sophomore at Mountain View High School. My favorite subjects are Math and Science, and the fields I'm interested in are Robotics, AI, and Software Engineering. In the future, I hope to work on robots that venture into space to collect data on otherworldly planets. In my free time, I like to read books, travel, hang out with friends, and play video games.
 
