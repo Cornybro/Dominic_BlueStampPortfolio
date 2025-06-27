@@ -32,12 +32,6 @@ For your final milestone, explain the outcome of your project. Key details to in
 
 Since my first milestone, I have constructed my robot chassis and attached all my electronic components to it using a strong double-sided adhesive. I was able to successfully test my DC Motors and Ultrasonic Sensor using code I found on the official Raspberry Pi website, and they contribute to the final goal since the motors will move the robot towards the ball, and the ultrasonic sensor can identify how far away different objects are, including the ball. Something surprising that has occurred was that I found some code for calibrating and sensing a certain color on Seeed Studio, and it worked perfectly without any problems at all. Normally, I have found that using code online to work on a project always has its own, unique kinks to work out, but the lack of those kinks surprised me. One challenge from Milestone 1 that was able to be overcome was the loss of the SSH Key connection between the Pi and my laptop. However, my lead instructors created a new WiFi that didn't have internal issues compared to the school WiFi, which allowed me to reestablish the SSH connection and made handling the Pi much easier. Before my final milestone, I have to create the main software for the robot, which entails creating a color mask for the ball and writing logic for the robot to track and move towards the ball.
 
-For your second milestone, explain what you've worked on since your previous milestone. You can highlight:
-- Technical details of what you've accomplished and how they contribute to the final goal
-- What has been surprising about the project so far
-- Previous challenges you faced that you overcame
-- What needs to be completed before your final milestone 
-
 # First Milestone: Setting up Raspberry Pi
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/qotKq9lGOao?si=t-YUARO0Oc2g_OL_" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
