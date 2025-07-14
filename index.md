@@ -11,20 +11,14 @@ Replace this text with a brief description (2-3 sentences) of your project. This
 
 My name is Dominic Reouk. I live in Los Altos and am a rising sophomore at Mountain View High School. My favorite subjects are Math and Science, and the fields I'm interested in are Robotics, AI, and Software Engineering. In the future, I hope to work on robots that venture into space to collect data on otherworldly planets. In my free time, I like to read books, travel, hang out with friends, and play video games.
 
-<!---
-# Final Milestone
-
-**Don't forget to replace the text below with the embedding for your milestone video. Go to Youtube, click Share -> Embed, and copy and paste the code to replace what's below.**
+# Final Milestone (Coding the logic)
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/F7M7imOVGug" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 
-For your final milestone, explain the outcome of your project. Key details to include are:
-- What you've accomplished since your previous milestone
-- What your biggest challenges and triumphs were at BSE
-- A summary of key topics you learned about
-- What you hope to learn in the future after everything you've learned at BSE
--->
-
+# Summary
+From my second milestone, I've gone through an iterative process of reorienting parts around the chassis and coding basic logic for the robot to track the ball. I reoriented my breadboard and battery pack following the addition of the portable charger, which allows the robot to become wireless and ready for testing, and I also went through multiple orientations for the ultrasonic sensor and PiCamera. I learned how to use Pulse Width Modulation, a function to help control the speed of DC Motors, to my advantage so that the robot could turn at a slower speed to more effectively find the ball. Once my hardware was settled, I started coding some basic logic, but was stuck at turning the various ideas I had into effective code. As a result, I used the help of ChatGPT to make substantial changes, which allowed my robot to unlock smart steering and allow it to detect the ball more frequently. A few key topics I learned about during my time at BSE were soldering, breadboard connections, the power equation, Ohm's Law, PWM, and the oscilloscope. I understood different solder joints and which onces to avoid, how the underside of a breadboard looks like and how to use one effecetively, how to calculate the necessary resistance for a project using the power equation, how Ohm's Law (V = IR) ties into my project, how to use PWM to control the speed of DC Motors, and the usefulness of an oscilloscope for visualizing connections. After everything I've learned at BSE, I hope to use my knowledge in soldering and breadboard connections for competition projects within school clubs, and I hope to understand at a deeper level how to use the power equation and Ohm's Law in complex electrical projects.
+# Challenges
+One minor challenge I encountered was deciding what orientation of the PiCamera and ultrasonic sensor I would use. I went through multiple orientations, which involved assembling and subsequently disassembling the PiCamera Mount, since its angle made ball detection difficult. I ended up taking two ultrasonic mounts and using double-sided tape to fix the two objects in optimal positions for detection. One major challenge I had was that one of my motors suddenly stopped working one day, so I learned how to use an oscilloscope so I could identify the problem, which was that I was misusing PWM due to my primitive understanding of the function at the time.
 
 # Second Milestone: Setting up Hardware and Electrical Connections
 
