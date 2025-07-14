@@ -141,6 +141,52 @@ def is_ball_centered(ball_x, frame_width, tolerance = 30):
     center_x = frame_width//2
     return abs(ball_x-center_x) < tolerance
 
+def set_motor_speed(left_speed, right_speed):
+    gpio.output(23, True)
+    gpio.output(22, False)
+    gpio.output(5, False)
+    gpio.output(6, True)
+    pwmA.ChangeDutyCycle(left_speed)
+    pwmB.ChangeDutyCycle(right_speed)
+
+def smooth_steering(ball_x, frame_width):
+    center_x = frame_width // 2
+    offset = ball_x - center_x
+    tolerance = 30
+    max_speed = 60
+    min_speed = 30
+    if abs(offset) < tolerance:
+        left_speed = right_speed = max_speed
+    else:
+        steering_factor = offset / center_x
+        steering_factor = max(min(steering_factor, 1), -1)
+
+        if steering_factor > 0:
+            left_speed = max_speed * (1 - abs(steering_factor) * 0.5)
+            right_speed = max_speed
+        else:
+            right_speed = max_speed * (1 - abs(steering_factor) * 0.5)
+            left_speed = max_speed
+
+    set_motor_speed(left_speed, right_speed)
+
+def search_for_ball(timeout=10):
+    start_time = time.time()
+    while time.time() - start_time < timeout:
+        im = picam2.capture_array()
+        hsvFrame = cv2.cvtColor(im, cv2.COLOR_BGR2HSV)
+        color_mask = cv2.inRange(hsvFrame, my_color_lower, my_color_upper)
+        contours, _ = cv2.findContours(color_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+        if contours:
+            print("Ball found during search!")
+            return True  # Exit search early if ball found
+
+        rotate_right_soft(0.1)  # Small incremental turn
+
+    print("Search timed out without finding ball")
+    return False
+
 def detect_single_color(imageFrame, color_name, lower_range, upper_range, color_display):
     hsvFrame = cv2.cvtColor(imageFrame, cv2.COLOR_BGR2HSV)
     color_mask = cv2.inRange(hsvFrame, lower_range, upper_range)
@@ -172,7 +218,16 @@ picam2.preview_configuration.align()
 picam2.configure("preview")
 picam2.start()
 ultrasonic = DistanceSensor(echo = 17, trigger = 10)
+'''
+while True:
+    im = picam2.capture_array()
+    hsvFrame = cv2.cvtColor(im, cv2.COLOR_BGR2HSV)
+    color_mask = cv2.inRange(hsvFrame, my_color_lower, my_color_upper)
+    contours, _ = cv2.findContours(color_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    print("Color pixels:", cv2.countNonZero(color_mask))
+    print("Ultrasonic distance:", ultrasonic.distance)
 
+'''
 while True:
     im = picam2.capture_array()
     hsvFrame = cv2.cvtColor(im, cv2.COLOR_BGR2HSV)
@@ -204,16 +259,20 @@ while True:
             ball_last_seen = "right"
         if is_ball_centered(ball_x, im.shape[1]):
             print("Ball centered")
-            if cv2.countNonZero(color_mask) < 150000 and ultrasonic.distance > 0.15:
+            if cv2.countNonZero(color_mask) < 150000 and ultrasonic.distance > 0.1:
                 move_forward(0.2, 55)
                 print("Approaching ball")
             else:
                 stop()
+                break
                 print("Parked in front of ball")
         else:
-            rotate_right_soft(0.3 if ball_last_seen == "right" else 0.0)
-            rotate_left_soft(0.3 if ball_last_seen == "left" else 0.0)
-            print(f"Ball off-center, rotating {ball_last_seen}")
+            if ball_last_seen in ["left", "right"]:
+                smooth_steering(ball_x, im.shape[1])
+                print(f"Ball off-center, smoothly steering {ball_last_seen}")
+            else:
+                rotate_right_soft(0.08)
+                print("Searching...")
     else:
         if ball_last_seen == "left":
             rotate_left_soft(0.3)
@@ -227,6 +286,7 @@ while True:
         else:
             rotate_right_soft(0.5)
             print("Searching...")
+stop()
 
 '''
 # Start a while loop
