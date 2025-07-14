@@ -8,10 +8,13 @@ import time
 Your_color = "Red"
 pwmA = None
 pwmB = None
+ball_last_seen = None
+stable_ball_counter = 0
+ball_required_stability = 3
 
 # Define your color range 163,179,121, 255, 111, 255
 my_color_lower = np.array([163, 121, 111], np.uint8)
-my_color_upper a= np.array([179, 255, 255], np.uint8)
+my_color_upper = np.array([179, 255, 255], np.uint8)
 gpio.setmode(gpio.BCM)
 
 def init():
@@ -24,7 +27,7 @@ def init():
     gpio.setup(5, gpio.OUT) #IN3
     gpio.setup(6, gpio.OUT) #IN4
     gpio.setup(7, gpio.OUT) #EN2
-   
+    
     pwmA = gpio.PWM(8, 1000)
     pwmB = gpio.PWM(7, 1000)
     pwmA.start(0)
@@ -35,29 +38,29 @@ def move_forward(duration, speed):
     gpio.output(22, False)
     gpio.output(5, False)
     gpio.output(6, True)
-   
+    
     pwmA.ChangeDutyCycle(100)
     pwmB.ChangeDutyCycle(100)
     time.sleep(0.05)
     pwmA.ChangeDutyCycle(speed)
     pwmB.ChangeDutyCycle(speed+7)
-   
+    
     time.sleep(duration)
     pwmA.ChangeDutyCycle(0)
     pwmB.ChangeDutyCycle(0)
-   
+    
 def move_backward(duration, speed):
     gpio.output(23, False)
     gpio.output(22, True)
     gpio.output(5, True)
     gpio.output(6, False)
-   
+    
     pwmA.ChangeDutyCycle(100)
     pwmB.ChangeDutyCycle(100)
     time.sleep(0.05)
     pwmA.ChangeDutyCycle(speed)
     pwmB.ChangeDutyCycle(speed+7)
-   
+    
     time.sleep(duration)
     pwmA.ChangeDutyCycle(0)
     pwmB.ChangeDutyCycle(0)
@@ -67,25 +70,28 @@ def rotate_left(duration, speed):
     gpio.output(22, False)
     gpio.output(5, True)
     gpio.output(6, False)
-   
+    
     pwmA.ChangeDutyCycle(100)
     pwmB.ChangeDutyCycle(100)
     time.sleep(0.05)
     pwmA.ChangeDutyCycle(speed)
     pwmB.ChangeDutyCycle(speed)
-   
+    
     time.sleep(duration)
     pwmA.ChangeDutyCycle(0)
     pwmB.ChangeDutyCycle(0)
-   
+    
 def rotate_left_soft(duration):
-    gpio.output(23, False)
-    gpio.output(22, True)
+    gpio.output(23, True)
+    gpio.output(22, False)
     gpio.output(5, False)
     gpio.output(6, False)
-
+    
+    pwmA.ChangeDutyCycle(100)
+    pwmB.ChangeDutyCycle(100)
+    time.sleep(0.05)
     pwmA.ChangeDutyCycle(0)
-    pwmB.ChangeDutyCycle(50)
+    pwmB.ChangeDutyCycle(25)
     time.sleep(duration)
 
     pwmA.ChangeDutyCycle(0)
@@ -96,33 +102,33 @@ def rotate_right(duration, speed):
     gpio.output(22, True)
     gpio.output(5, False)
     gpio.output(6, True)
-   
+    
     pwmA.ChangeDutyCycle(100)
     pwmB.ChangeDutyCycle(100)
     time.sleep(0.05)
     pwmA.ChangeDutyCycle(speed)
     pwmB.ChangeDutyCycle(speed)
-   
+    
     time.sleep(duration)
     pwmA.ChangeDutyCycle(0)
     pwmB.ChangeDutyCycle(0)
-   
+    
 def rotate_right_soft(duration):
     gpio.output(23, False)
     gpio.output(22, False)
     gpio.output(5, False)
     gpio.output(6, True)
-   
+    
     pwmA.ChangeDutyCycle(100)
     pwmB.ChangeDutyCycle(100)
     time.sleep(0.05)
-    pwmA.ChangeDutyCycle(50)
+    pwmA.ChangeDutyCycle(25)
     pwmB.ChangeDutyCycle(0)
-   
+    
     time.sleep(duration)
     pwmA.ChangeDutyCycle(0)
     pwmB.ChangeDutyCycle(0)
-   
+    
 def stop():
     gpio.output(23, False)
     gpio.output(22, False)
@@ -130,8 +136,8 @@ def stop():
     gpio.output(6, False)
     pwmA.ChangeDutyCycle(0)
     pwmB.ChangeDutyCycle(0)
-   
-def is_ball_centered(ball_x, frame_width, tolerance = 50):
+    
+def is_ball_centered(ball_x, frame_width, tolerance = 30):
     center_x = frame_width//2
     return abs(ball_x-center_x) < tolerance
 
@@ -172,22 +178,55 @@ while True:
     hsvFrame = cv2.cvtColor(im, cv2.COLOR_BGR2HSV)
     color_mask = cv2.inRange(hsvFrame, my_color_lower, my_color_upper)
     contours, _ = cv2.findContours(color_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-   
+    
     if contours:
+        stop()
+        print("Ball found")
         largest = max(contours, key=cv2.contourArea)
         x,y,w,h = cv2.boundingRect(largest)
         ball_x = x+w//2
-        if is_ball_centered(ball_x, im.shape[1]):
-            while cv2.countNonZero(color_mask) < 400000 and ultrasonic.distance > 0.1:
-                move_forward(0.1, 75)
-            break
+        frame_center = im.shape[1]//2
+        area = cv2.contourArea(largest)
+        if area > 10000:
+            stable_ball_counter += 1
         else:
-            rotate_right_soft(0.3)
+            stable_ball_counter = 0
     else:
-        rotate_right_soft(0.5)
-
-print("Parked in front of ball")
-stop()
+        stable_ball_counter = 0
+    
+    if stable_ball_counter >= ball_required_stability:        
+        offset = ball_x - frame_center
+        if abs(offset) < 40:
+            ball_last_seen = "center"
+        elif offset < 0:
+            ball_last_seen = "left"
+        else:
+            ball_last_seen = "right"
+        if is_ball_centered(ball_x, im.shape[1]):
+            print("Ball centered")
+            if cv2.countNonZero(color_mask) < 150000 and ultrasonic.distance > 0.15:
+                move_forward(0.2, 55)
+                print("Approaching ball")
+            else:
+                stop()
+                print("Parked in front of ball")
+        else:
+            rotate_right_soft(0.3 if ball_last_seen == "right" else 0.0)
+            rotate_left_soft(0.3 if ball_last_seen == "left" else 0.0)
+            print(f"Ball off-center, rotating {ball_last_seen}")
+    else:
+        if ball_last_seen == "left":
+            rotate_left_soft(0.3)
+            print("Ball lost, rotating left to reacquire")
+        elif ball_last_seen == "right":
+            rotate_right_soft(0.3)
+            print("Ball lost, rotating right to reacquire")
+        elif ball_last_seen == "center":
+            rotate_right_soft(0.2)
+            print("Ball was centered but now lost")
+        else:
+            rotate_right_soft(0.5)
+            print("Searching...")
 
 '''
 # Start a while loop
