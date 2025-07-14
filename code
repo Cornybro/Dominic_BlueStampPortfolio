@@ -1,0 +1,206 @@
+import cv2
+import numpy as np
+from picamera2 import Picamera2
+import RPi.GPIO as gpio
+from gpiozero import DistanceSensor
+import time
+
+Your_color = "Red"
+pwmA = None
+pwmB = None
+
+# Define your color range 163,179,121, 255, 111, 255
+my_color_lower = np.array([163, 121, 111], np.uint8)
+my_color_upper a= np.array([179, 255, 255], np.uint8)
+gpio.setmode(gpio.BCM)
+
+def init():
+    global pwmA, pwmB
+    # Motor 1
+    gpio.setup(23, gpio.OUT) #IN1
+    gpio.setup(22, gpio.OUT) #IN2
+    gpio.setup(8, gpio.OUT) #EN1
+    # Motor 2
+    gpio.setup(5, gpio.OUT) #IN3
+    gpio.setup(6, gpio.OUT) #IN4
+    gpio.setup(7, gpio.OUT) #EN2
+   
+    pwmA = gpio.PWM(8, 1000)
+    pwmB = gpio.PWM(7, 1000)
+    pwmA.start(0)
+    pwmB.start(0)
+
+def move_forward(duration, speed):
+    gpio.output(23, True)
+    gpio.output(22, False)
+    gpio.output(5, False)
+    gpio.output(6, True)
+   
+    pwmA.ChangeDutyCycle(100)
+    pwmB.ChangeDutyCycle(100)
+    time.sleep(0.05)
+    pwmA.ChangeDutyCycle(speed)
+    pwmB.ChangeDutyCycle(speed+7)
+   
+    time.sleep(duration)
+    pwmA.ChangeDutyCycle(0)
+    pwmB.ChangeDutyCycle(0)
+   
+def move_backward(duration, speed):
+    gpio.output(23, False)
+    gpio.output(22, True)
+    gpio.output(5, True)
+    gpio.output(6, False)
+   
+    pwmA.ChangeDutyCycle(100)
+    pwmB.ChangeDutyCycle(100)
+    time.sleep(0.05)
+    pwmA.ChangeDutyCycle(speed)
+    pwmB.ChangeDutyCycle(speed+7)
+   
+    time.sleep(duration)
+    pwmA.ChangeDutyCycle(0)
+    pwmB.ChangeDutyCycle(0)
+
+def rotate_left(duration, speed):
+    gpio.output(23, True)
+    gpio.output(22, False)
+    gpio.output(5, True)
+    gpio.output(6, False)
+   
+    pwmA.ChangeDutyCycle(100)
+    pwmB.ChangeDutyCycle(100)
+    time.sleep(0.05)
+    pwmA.ChangeDutyCycle(speed)
+    pwmB.ChangeDutyCycle(speed)
+   
+    time.sleep(duration)
+    pwmA.ChangeDutyCycle(0)
+    pwmB.ChangeDutyCycle(0)
+   
+def rotate_left_soft(duration):
+    gpio.output(23, False)
+    gpio.output(22, True)
+    gpio.output(5, False)
+    gpio.output(6, False)
+
+    pwmA.ChangeDutyCycle(0)
+    pwmB.ChangeDutyCycle(50)
+    time.sleep(duration)
+
+    pwmA.ChangeDutyCycle(0)
+    pwmB.ChangeDutyCycle(0)
+
+def rotate_right(duration, speed):
+    gpio.output(23, False)
+    gpio.output(22, True)
+    gpio.output(5, False)
+    gpio.output(6, True)
+   
+    pwmA.ChangeDutyCycle(100)
+    pwmB.ChangeDutyCycle(100)
+    time.sleep(0.05)
+    pwmA.ChangeDutyCycle(speed)
+    pwmB.ChangeDutyCycle(speed)
+   
+    time.sleep(duration)
+    pwmA.ChangeDutyCycle(0)
+    pwmB.ChangeDutyCycle(0)
+   
+def rotate_right_soft(duration):
+    gpio.output(23, False)
+    gpio.output(22, False)
+    gpio.output(5, False)
+    gpio.output(6, True)
+   
+    pwmA.ChangeDutyCycle(100)
+    pwmB.ChangeDutyCycle(100)
+    time.sleep(0.05)
+    pwmA.ChangeDutyCycle(50)
+    pwmB.ChangeDutyCycle(0)
+   
+    time.sleep(duration)
+    pwmA.ChangeDutyCycle(0)
+    pwmB.ChangeDutyCycle(0)
+   
+def stop():
+    gpio.output(23, False)
+    gpio.output(22, False)
+    gpio.output(5, False)
+    gpio.output(6, False)
+    pwmA.ChangeDutyCycle(0)
+    pwmB.ChangeDutyCycle(0)
+   
+def is_ball_centered(ball_x, frame_width, tolerance = 50):
+    center_x = frame_width//2
+    return abs(ball_x-center_x) < tolerance
+
+def detect_single_color(imageFrame, color_name, lower_range, upper_range, color_display):
+    hsvFrame = cv2.cvtColor(imageFrame, cv2.COLOR_BGR2HSV)
+    color_mask = cv2.inRange(hsvFrame, lower_range, upper_range)
+
+    kernel = np.ones((5, 5), "uint8")
+    color_mask = cv2.dilate(color_mask, kernel)
+    result = cv2.bitwise_and(imageFrame, imageFrame, mask=color_mask)
+
+    contours, hierarchy = cv2.findContours(color_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+    for pic, contour in enumerate(contours):
+        area = cv2.contourArea(contour)
+        if area > 10000:
+            x, y, w, h = cv2.boundingRect(contour)
+            center_x = x+w//2
+            top_y = y
+            bottom_y = y + h
+            imageFrame = cv2.line(imageFrame, (center_x, top_y), (center_x, bottom_y), color_display, 2)
+            cv2.putText(imageFrame, "Ball Center", (x, y), cv2.FONT_HERSHEY_SIMPLEX, 1.0, color_display)
+
+    return imageFrame
+
+# Initialize PiCamera
+init()
+picam2 = Picamera2()
+picam2.preview_configuration.main.size = (1280, 720)
+picam2.preview_configuration.main.format = "RGB888"
+picam2.preview_configuration.align()
+picam2.configure("preview")
+picam2.start()
+ultrasonic = DistanceSensor(echo = 17, trigger = 10)
+
+while True:
+    im = picam2.capture_array()
+    hsvFrame = cv2.cvtColor(im, cv2.COLOR_BGR2HSV)
+    color_mask = cv2.inRange(hsvFrame, my_color_lower, my_color_upper)
+    contours, _ = cv2.findContours(color_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+   
+    if contours:
+        largest = max(contours, key=cv2.contourArea)
+        x,y,w,h = cv2.boundingRect(largest)
+        ball_x = x+w//2
+        if is_ball_centered(ball_x, im.shape[1]):
+            while cv2.countNonZero(color_mask) < 400000 and ultrasonic.distance > 0.1:
+                move_forward(0.1, 75)
+            break
+        else:
+            rotate_right_soft(0.3)
+    else:
+        rotate_right_soft(0.5)
+
+print("Parked in front of ball")
+stop()
+
+'''
+# Start a while loop
+while True:
+    im = picam2.capture_array()
+    hsvFrame = cv2.cvtColor(im, cv2.COLOR_BGR2HSV)
+    color_mask = cv2.inRange(hsvFrame, my_color_lower, my_color_upper)
+    color_pixel_count = cv2.countNonZero(color_mask)
+    #result_frame = detect_single_color(im, Your_color, my_color_lower, my_color_upper, (0, 255, 0))
+    #cv2.imshow("Single Color Detection in Real-Time", result_frame)
+    #print("Matching color pixels:", color_pixel_count)
+    if cv2.waitKey(10) & 0xFF == ord('q'):
+        picam2.stop()
+        cv2.destroyAllWindows()
+        break
+'''
