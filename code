@@ -27,40 +27,59 @@ def init():
     gpio.setup(5, gpio.OUT) #IN3
     gpio.setup(6, gpio.OUT) #IN4
     gpio.setup(7, gpio.OUT) #EN2
-    
+    #LED
+    gpio.setup(16, gpio.OUT) #RED
+    gpio.setup(20, gpio.OUT) #GREEN
+    gpio.setup(26, gpio.OUT) #BLUE
+   
     pwmA = gpio.PWM(8, 1000)
     pwmB = gpio.PWM(7, 1000)
     pwmA.start(0)
     pwmB.start(0)
+   
+def light_red():
+    gpio.output(16, True)
+    gpio.output(20, False)
+    gpio.output(26, False)
+   
+def light_green():
+    gpio.output(16, False)
+    gpio.output(20, True)
+    gpio.output(26, False)
+   
+def light_blue():
+    gpio.output(16, False)
+    gpio.output(20, False)
+    gpio.output(26, True)
 
 def move_forward(duration, speed):
     gpio.output(23, True)
     gpio.output(22, False)
     gpio.output(5, False)
     gpio.output(6, True)
-    
+   
     pwmA.ChangeDutyCycle(100)
     pwmB.ChangeDutyCycle(100)
     time.sleep(0.05)
     pwmA.ChangeDutyCycle(speed)
     pwmB.ChangeDutyCycle(speed+7)
-    
+   
     time.sleep(duration)
     pwmA.ChangeDutyCycle(0)
     pwmB.ChangeDutyCycle(0)
-    
+   
 def move_backward(duration, speed):
     gpio.output(23, False)
     gpio.output(22, True)
     gpio.output(5, True)
     gpio.output(6, False)
-    
+   
     pwmA.ChangeDutyCycle(100)
     pwmB.ChangeDutyCycle(100)
     time.sleep(0.05)
     pwmA.ChangeDutyCycle(speed)
     pwmB.ChangeDutyCycle(speed+7)
-    
+   
     time.sleep(duration)
     pwmA.ChangeDutyCycle(0)
     pwmB.ChangeDutyCycle(0)
@@ -70,28 +89,29 @@ def rotate_left(duration, speed):
     gpio.output(22, False)
     gpio.output(5, True)
     gpio.output(6, False)
-    
+   
     pwmA.ChangeDutyCycle(100)
     pwmB.ChangeDutyCycle(100)
     time.sleep(0.05)
     pwmA.ChangeDutyCycle(speed)
     pwmB.ChangeDutyCycle(speed)
-    
+   
     time.sleep(duration)
     pwmA.ChangeDutyCycle(0)
     pwmB.ChangeDutyCycle(0)
-    
+   
 def rotate_left_soft(duration):
+    print("rotate_left_soft CALLED")
     gpio.output(23, True)
     gpio.output(22, False)
     gpio.output(5, False)
     gpio.output(6, False)
-    
+   
     pwmA.ChangeDutyCycle(100)
     pwmB.ChangeDutyCycle(100)
     time.sleep(0.05)
     pwmA.ChangeDutyCycle(0)
-    pwmB.ChangeDutyCycle(25)
+    pwmB.ChangeDutyCycle(50)
     time.sleep(duration)
 
     pwmA.ChangeDutyCycle(0)
@@ -102,33 +122,34 @@ def rotate_right(duration, speed):
     gpio.output(22, True)
     gpio.output(5, False)
     gpio.output(6, True)
-    
+   
     pwmA.ChangeDutyCycle(100)
     pwmB.ChangeDutyCycle(100)
     time.sleep(0.05)
     pwmA.ChangeDutyCycle(speed)
     pwmB.ChangeDutyCycle(speed)
-    
+   
     time.sleep(duration)
     pwmA.ChangeDutyCycle(0)
     pwmB.ChangeDutyCycle(0)
-    
+   
 def rotate_right_soft(duration):
+    print("rotate_right_soft CALLED")
     gpio.output(23, False)
     gpio.output(22, False)
     gpio.output(5, False)
     gpio.output(6, True)
-    
+   
     pwmA.ChangeDutyCycle(100)
     pwmB.ChangeDutyCycle(100)
     time.sleep(0.05)
     pwmA.ChangeDutyCycle(25)
     pwmB.ChangeDutyCycle(0)
-    
+   
     time.sleep(duration)
     pwmA.ChangeDutyCycle(0)
     pwmB.ChangeDutyCycle(0)
-    
+   
 def stop():
     gpio.output(23, False)
     gpio.output(22, False)
@@ -136,18 +157,27 @@ def stop():
     gpio.output(6, False)
     pwmA.ChangeDutyCycle(0)
     pwmB.ChangeDutyCycle(0)
-    
+   
 def is_ball_centered(ball_x, frame_width, tolerance = 30):
     center_x = frame_width//2
     return abs(ball_x-center_x) < tolerance
 
 def set_motor_speed(left_speed, right_speed):
-    gpio.output(23, True)
-    gpio.output(22, False)
-    gpio.output(5, False)
-    gpio.output(6, True)
-    pwmA.ChangeDutyCycle(left_speed)
-    pwmB.ChangeDutyCycle(right_speed)
+    if left_speed >= 0:
+        gpio.output(23, True)
+        gpio.output(22, False)
+    else:
+        gpio.output(23, False)
+        gpio.output(22, True)
+    pwmA.ChangeDutyCycle(abs(left_speed))
+
+    if right_speed >= 0:
+        gpio.output(5, False)
+        gpio.output(6, True)
+    else:
+        gpio.output(5, True)
+        gpio.output(6, False)
+    pwmB.ChangeDutyCycle(abs(right_speed))
 
 def smooth_steering(ball_x, frame_width):
     center_x = frame_width // 2
@@ -162,52 +192,35 @@ def smooth_steering(ball_x, frame_width):
         steering_factor = max(min(steering_factor, 1), -1)
 
         if steering_factor > 0:
-            left_speed = max_speed * (1 - abs(steering_factor) * 0.5)
-            right_speed = max_speed
-        else:
             right_speed = max_speed * (1 - abs(steering_factor) * 0.5)
             left_speed = max_speed
+        else:
+            left_speed = max_speed * (1 - abs(steering_factor) * 0.5)
+            right_speed = max_speed
 
     set_motor_speed(left_speed, right_speed)
 
-def search_for_ball(timeout=10):
+def search_for_ball(timeout=10, min_area=100000):
     start_time = time.time()
+    direction = -1 if ball_last_seen == "left" else 1
     while time.time() - start_time < timeout:
+        if direction == -1:
+            rotate_left_soft(0.15)
+        else:
+            rotate_right_soft(0.15)
         im = picam2.capture_array()
         hsvFrame = cv2.cvtColor(im, cv2.COLOR_BGR2HSV)
         color_mask = cv2.inRange(hsvFrame, my_color_lower, my_color_upper)
         contours, _ = cv2.findContours(color_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
         if contours:
-            print("Ball found during search!")
-            return True  # Exit search early if ball found
+            largest = max(contours, key=cv2.contourArea)
+            area = cv2.contourArea(largest)
 
-        rotate_right_soft(0.1)  # Small incremental turn
-
-    print("Search timed out without finding ball")
+            if area >= min_area:
+                print("Ball found during search!")
+                return True
     return False
-
-def detect_single_color(imageFrame, color_name, lower_range, upper_range, color_display):
-    hsvFrame = cv2.cvtColor(imageFrame, cv2.COLOR_BGR2HSV)
-    color_mask = cv2.inRange(hsvFrame, lower_range, upper_range)
-
-    kernel = np.ones((5, 5), "uint8")
-    color_mask = cv2.dilate(color_mask, kernel)
-    result = cv2.bitwise_and(imageFrame, imageFrame, mask=color_mask)
-
-    contours, hierarchy = cv2.findContours(color_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-
-    for pic, contour in enumerate(contours):
-        area = cv2.contourArea(contour)
-        if area > 10000:
-            x, y, w, h = cv2.boundingRect(contour)
-            center_x = x+w//2
-            top_y = y
-            bottom_y = y + h
-            imageFrame = cv2.line(imageFrame, (center_x, top_y), (center_x, bottom_y), color_display, 2)
-            cv2.putText(imageFrame, "Ball Center", (x, y), cv2.FONT_HERSHEY_SIMPLEX, 1.0, color_display)
-
-    return imageFrame
 
 # Initialize PiCamera
 init()
@@ -218,63 +231,60 @@ picam2.preview_configuration.align()
 picam2.configure("preview")
 picam2.start()
 ultrasonic = DistanceSensor(echo = 17, trigger = 10)
-'''
-while True:
-    im = picam2.capture_array()
-    hsvFrame = cv2.cvtColor(im, cv2.COLOR_BGR2HSV)
-    color_mask = cv2.inRange(hsvFrame, my_color_lower, my_color_upper)
-    contours, _ = cv2.findContours(color_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-    print("Color pixels:", cv2.countNonZero(color_mask))
-    print("Ultrasonic distance:", ultrasonic.distance)
 
-'''
 while True:
     im = picam2.capture_array()
     hsvFrame = cv2.cvtColor(im, cv2.COLOR_BGR2HSV)
     color_mask = cv2.inRange(hsvFrame, my_color_lower, my_color_upper)
     contours, _ = cv2.findContours(color_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-    
     if contours:
-        stop()
-        print("Ball found")
+        light_blue()
         largest = max(contours, key=cv2.contourArea)
-        x,y,w,h = cv2.boundingRect(largest)
-        ball_x = x+w//2
-        frame_center = im.shape[1]//2
         area = cv2.contourArea(largest)
-        if area > 10000:
-            stable_ball_counter += 1
-        else:
+        if area > 120000:
             stable_ball_counter = 0
-    else:
-        stable_ball_counter = 0
-    
-    if stable_ball_counter >= ball_required_stability:        
-        offset = ball_x - frame_center
-        if abs(offset) < 40:
-            ball_last_seen = "center"
-        elif offset < 0:
-            ball_last_seen = "left"
-        else:
-            ball_last_seen = "right"
-        if is_ball_centered(ball_x, im.shape[1]):
-            print("Ball centered")
-            if cv2.countNonZero(color_mask) < 150000 and ultrasonic.distance > 0.1:
-                move_forward(0.2, 55)
-                print("Approaching ball")
+            x,y,w,h = cv2.boundingRect(largest)
+            ball_x = x+w//2
+            frame_center = im.shape[1]//2      
+            offset = ball_x - frame_center
+            print(f"Offset: {offset}, ball_last_seen set to: {ball_last_seen}")
+            if abs(offset) < 40:
+                ball_last_seen = "center"
+            elif offset < 0:
+                ball_last_seen = "left"
             else:
-                stop()
-                break
-                print("Parked in front of ball")
-        else:
-            if ball_last_seen in ["left", "right"]:
+                ball_last_seen = "right"
+               
+            print("Ball found")
+           
+            if is_ball_centered(ball_x, im.shape[1]):
+                print("Ball centered")
+                if cv2.countNonZero(color_mask) < 150000 and ultrasonic.distance > 0.1:
+                    light_blue()
+                    move_forward(0.2, 55)
+                    print("Approaching ball")
+                else:
+                    stop()
+                    light_green()
+                    print("Parked in front of ball")
+            else:
+                light_blue()
                 smooth_steering(ball_x, im.shape[1])
                 print(f"Ball off-center, smoothly steering {ball_last_seen}")
-            else:
-                rotate_right_soft(0.08)
-                print("Searching...")
+        else:
+            light_red()
+            print("Contour too small, ignoring")
+            stable_ball_counter += 1
+            if stable_ball_counter > 5:
+                ball_last_seen = None
+                print("Clearing ball_last_seen due to instability")
+            found = search_for_ball()
+
     else:
+        light_red()
+        print(f"[DEBUG] ball_last_seen = {ball_last_seen}")
         if ball_last_seen == "left":
+            print("Main: ball_last_seen = left ? calling rotate_left_soft")
             rotate_left_soft(0.3)
             print("Ball lost, rotating left to reacquire")
         elif ball_last_seen == "right":
@@ -284,11 +294,24 @@ while True:
             rotate_right_soft(0.2)
             print("Ball was centered but now lost")
         else:
-            rotate_right_soft(0.5)
-            print("Searching...")
-stop()
-
+            print("Ball completely lost. Running search...")
+            found = search_for_ball()
+            if found:
+                light_blue()
+                print("Ball reacquired. Returning to tracking...")
+            else:
+                stop()
+                print("Ball not found after search. Waiting or retrying...")
+                time.sleep(0.5)
 '''
+while True:
+    im = picam2.capture_array()
+    hsvFrame = cv2.cvtColor(im, cv2.COLOR_BGR2HSV)
+    color_mask = cv2.inRange(hsvFrame, my_color_lower, my_color_upper)
+    contours, _ = cv2.findContours(color_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    print("Color pixels:", cv2.countNonZero(color_mask))
+    print("Ultrasonic distance:", ultrasonic.distance)
+   
 # Start a while loop
 while True:
     im = picam2.capture_array()
