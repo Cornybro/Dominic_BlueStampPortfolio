@@ -4,7 +4,7 @@ from picamera2 import Picamera2
 import RPi.GPIO as gpio
 from gpiozero import DistanceSensor
 import time
-
+ 
 Your_color = "Red"
 pwmA = None
 pwmB = None
@@ -271,6 +271,13 @@ while True:
                 light_blue()
                 smooth_steering(ball_x, im.shape[1])
                 print(f"Ball off-center, smoothly steering {ball_last_seen}")
+            cv2.rectangle(im, (x, y), (x + w, y + h), (0, 255, 0), 3)
+            cv2.line(im, (frame_center, 0), (frame_center, im.shape[0]), (255, 0, 0), 2)
+            cv2.circle(im, (ball_x, y + h // 2), 10, (0, 0, 255), -1)
+            
+            cv2.putText(im, f"Offset: {offset}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2)
+            cv2.putText(im, f"Last seen: {ball_last_seen}", (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2)
+            cv2.putText(im, f"Distance: {ultrasonic.distance:.2f}m", (10, 90), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2)
         else:
             light_red()
             print("Contour too small, ignoring")
@@ -303,6 +310,18 @@ while True:
                 stop()
                 print("Ball not found after search. Waiting or retrying...")
                 time.sleep(0.5)
+
+    display = im.copy()
+    text_color = (255, 255, 255)
+    cv2.putText(display, f"Ball Last Seen: {ball_last_seen}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, text_color, 2)
+    cv2.putText(display, f"Ultrasonic: {ultrasonic.distance:.2f}m", (10, 70), cv2.FONT_HERSHEY_SIMPLEX, 1, text_color, 2)
+                
+    cv2.imshow("PiCam View", im)
+
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        picam2.stop()
+        cv2.destroyAllWindows()
+        break
 '''
 while True:
     im = picam2.capture_array()
