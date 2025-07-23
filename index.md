@@ -6,8 +6,6 @@ My project is a ball-tracking robot that implements two fundamental sensors, the
 |:--:|:--:|:--:|:--:|
 | Dominic R | Mountain View High School | Software Engineering | Incoming Sophomore |
 
-<img src = "DominicR.jpg" width = "450" height = "600">
-
 # Final Milestone (Coding the logic)
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/JE0mSJVivUM?si=rRrgV_1lsp3SeP-V" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
@@ -63,6 +61,8 @@ void loop() {
 # Bill of Materials (Main Project)
 
 # Retro Arcade Gaming Console
+
+<img src = "DominicR.jpg" width = "450" height = "600">
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/cbm1Ko4pPN8?si=BsYM3Q0l8w3hW4iN" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 My project was the Retro Arcade Gaming Console. It came with a PCB with all the software already installed, and what I had to do was solder all the components onto the board and hook up a battery pack to power it. One challenge I faced was that I accidentally bridged the capacitor when soldering it, and I had to use desoldering wick and soldering paste to remove the solder so I could redo the solder connection. I'm excited to continue on to the intensive project, where I will be creating a ball-tracking robot.
