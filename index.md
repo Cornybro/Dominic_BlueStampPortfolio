@@ -1,15 +1,12 @@
 # Ball Tracking Robot Using Computer Vision
-<!---
-Replace this text with a brief description (2-3 sentences) of your project. This description should draw the reader in and make them interested in what you've built. You can include what the biggest challenges, takeaways, and triumphs from completing the project were. As you complete your portfolio, remember your audience is less familiar than you are with all that your project entails!
--->
+
+My project is a ball-tracking robot that implements two fundamental sensors, the ultrasonic sensor and the PiCamera, to detect the ball's color and park in front of it. It runs on a Raspberry Pi 4, which is a microcomputer, and uses OpenCV, a computer vision library for the PiCamera that allows you to create color masks for any object. It also uses the ultrasonic sensor that sends out soundwaves and measures the time it takes for them to return to determine the distance an object is from the sensor.
 
 | **Engineer** | **School** | **Area of Interest** | **Grade** |
 |:--:|:--:|:--:|:--:|
 | Dominic R | Mountain View High School | Software Engineering | Incoming Sophomore |
 
 <img src = "DominicR.jpg" width = "450" height = "600">
-
-My name is Dominic Reouk. I live in Los Altos and am a rising sophomore at Mountain View High School. My favorite subjects are Math and Science, and the fields I'm interested in are Robotics, AI, and Software Engineering. In the future, I hope to work on robots that venture into space to collect data on otherworldly planets. In my free time, I like to read books, travel, hang out with friends, and play video games.
 
 # Final Milestone (Coding the logic)
 
@@ -40,22 +37,12 @@ My project is a ball-tracking robot, which means that it needs some way to recei
 # Challenges
 Although setting up the Raspberry Pi was smooth at first, when I tried filming the first milestone video, the SSH Key failed, and from then on, it hasn't shown sign of being reestablished. However, I plan to solve this problem by directly coding on the Raspberry Pi using a software called OBS Capture instead of connecting to the Pi and coding it remotely. This software uses an HDMI cable to visualize the Pi as a computer on your laptop screen. The instructors are also talking of creating a new WiFi network for each classroom that allows SSH Key connections since the school WiFi has restrictions on these connections.
 
-# Retro Arcade Gaming Console
+# Schematics (Main Project)
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/cbm1Ko4pPN8?si=BsYM3Q0l8w3hW4iN" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-My project was the Retro Arcade Gaming Console. It came with a PCB with all the software already installed, and what I had to do was solder all the components onto the board and hook up a battery pack to power it. One challenge I faced was that I accidentally bridged the capacitor when soldering it, and I had to use desoldering wick and soldering paste to remove the solder so I could redo the solder connection. I'm excited to continue on to the intensive project, where I will be creating a ball-tracking robot.
-
-# Schematics (Starter Project)
-<!--
-Here's where you'll put images of your schematics. [Tinkercad](https://www.tinkercad.com/blog/official-guide-to-tinkercad-circuits) and [Fritzing](https://fritzing.org/learning/) are both great resoruces to create professional schematic diagrams, though BSE recommends Tinkercad becuase it can be done easily and for free in the browser. 
--->
-![Headstone Image](schematics-_WNfuLqZO8t.jpg)
-
-<!--
 # Code
 Here's where you'll put your code. The syntax below places it into a block of code. Follow the guide [here]([url](https://www.markdownguide.org/extended-syntax/)) to learn how to customize it to your project needs. 
 
-```c++
+```python
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
@@ -68,6 +55,20 @@ void loop() {
 }
 ```
 -->
+
+# Bill of Materials (Main Project)
+
+# Retro Arcade Gaming Console
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/cbm1Ko4pPN8?si=BsYM3Q0l8w3hW4iN" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+My project was the Retro Arcade Gaming Console. It came with a PCB with all the software already installed, and what I had to do was solder all the components onto the board and hook up a battery pack to power it. One challenge I faced was that I accidentally bridged the capacitor when soldering it, and I had to use desoldering wick and soldering paste to remove the solder so I could redo the solder connection. I'm excited to continue on to the intensive project, where I will be creating a ball-tracking robot.
+
+# Schematics (Starter Project)
+<!--
+Here's where you'll put images of your schematics. [Tinkercad](https://www.tinkercad.com/blog/official-guide-to-tinkercad-circuits) and [Fritzing](https://fritzing.org/learning/) are both great resoruces to create professional schematic diagrams, though BSE recommends Tinkercad becuase it can be done easily and for free in the browser. 
+-->
+![Headstone Image](schematics-_WNfuLqZO8t.jpg)
+
 # Bill of Materials (Starter Project)
 
 Here's where you'll list the parts in your project. To add more rows, just copy and paste the example rows below.
@@ -93,8 +94,7 @@ Don't forget to place the link of where to buy each component inside the quotati
 | Battery Case | Allows for batteries to be placed in and provide long-term power | $7 | <a href="[https://www.amazon.com/Arduino-A000066-ARDUINO-UNO-R3/dp/B008GRTSV6/](https://www.amazon.com/Battery-Holder-Barrel-Connector-Arduino/dp/B07T65WWCR/ref=sr_1_1?crid=1OYXN0JTMLBQ1&dib=eyJ2IjoiMSJ9.ghtrwrmtGzNZNMN4_tCMJiIaiC29HwmDKl2OB7D2rZWC4ziKD6XJnm1cpNA6pR21hdaTsmF7jr1qq8MQtj129bHnusbMBy7K8ggKaApevF0gcZGxNB6PfzNw3ICqhJ9dht_CNasG6ROTdpBxEhHUmoqCFWxbwhDnkzqjwVbR1SqJ0q7looK4T22CQ0xGjpDxz5-kojyVjiuJrNXw4-KqgwGc4txp1LMnk9MB4CR0nAQ.4Pq7-z8RyRvipV96QvhQPgZDZtMUKh_YOreMBiFtCfM&dib_tag=se&keywords=arduino+battery+case&qid=1752795059&s=industrial&sprefix=arduino+battery+cas%2Cindustrial%2C123&sr=1-1)"> Link </a> |
 | Acrylic shell | Allows for device to be more wieldy | $10 | <a href="[https://www.amazon.com/Arduino-A000066-ARDUINO-UNO-R3/dp/B008GRTSV6/](https://www.amazon.com/SunFounder-Transparent-Compatible-Original-Included/dp/B0CGDTD5PJ/ref=sr_1_3?crid=288PH8MAWLA9M&dib=eyJ2IjoiMSJ9.n0BJ_rb3yZ0sHqcY7KsFTNb4Sxyn6906z4y52jSf_GpUkV90aelkNJys4U9PWc6jkSLuls7eHEjk9Sq2z8e25bMVabogobhV5hpZ1QiNdNnYMF76B8r6CLC9pqQ-vJBPSjzFkCzTKXQ2pIMdd_i18zCw8zX6Gwr8nknWOvIIG29hWqJKvAM8dzPKbvtKXkFjwE-MzRvVX246ZRmHn4ilbHNdofGX5pYZFA0cXB3byu8.e9o5mTvvtq0UR2M51Np-ozBihJJP_Qw_xsTAz5sgE1U&dib_tag=se&keywords=acrylic+shell+arduino&qid=1752795114&sprefix=acrylic+shell+arduino%2Caps%2C121&sr=8-3)"> Link </a> |
 
-<!--
-# Other Resources/Examples
+<!--# Other Resources/Examples
 One of the best parts about Github is that you can view how other people set up their own work. Here are some past BSE portfolios that are awesome examples. You can view how they set up their portfolio, and you can view their index.md files to understand how they implemented different portfolio components.
 - [Example 1](https://trashytuber.github.io/YimingJiaBlueStamp/)
 - [Example 2](https://sviatil0.github.io/Sviatoslav_BSE/)
