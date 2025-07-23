@@ -618,5 +618,5 @@ Don't forget to place the link of where to buy each component inside the quotati
 | Acrylic shell | Allows for device to be more wieldy | $10 | <a href="[https://www.amazon.com/Arduino-A000066-ARDUINO-UNO-R3/dp/B008GRTSV6/](https://www.amazon.com/SunFounder-Transparent-Compatible-Original-Included/dp/B0CGDTD5PJ/ref=sr_1_3?crid=288PH8MAWLA9M&dib=eyJ2IjoiMSJ9.n0BJ_rb3yZ0sHqcY7KsFTNb4Sxyn6906z4y52jSf_GpUkV90aelkNJys4U9PWc6jkSLuls7eHEjk9Sq2z8e25bMVabogobhV5hpZ1QiNdNnYMF76B8r6CLC9pqQ-vJBPSjzFkCzTKXQ2pIMdd_i18zCw8zX6Gwr8nknWOvIIG29hWqJKvAM8dzPKbvtKXkFjwE-MzRvVX246ZRmHn4ilbHNdofGX5pYZFA0cXB3byu8.e9o5mTvvtq0UR2M51Np-ozBihJJP_Qw_xsTAz5sgE1U&dib_tag=se&keywords=acrylic+shell+arduino&qid=1752795114&sprefix=acrylic+shell+arduino%2Caps%2C121&sr=8-3)"> Link </a> |
 
 # Other Resources/Examples
-- [Resource 1]([https://trashytuber.github.io/YimingJiaBlueStamp/](https://www.raspberrypi-spy.co.uk/2012/06/simple-guide-to-the-rpi-gpio-header-and-pins/))
-- [Resource 2]([https://sviatil0.github.io/Sviatoslav_BSE/](https://deringur.github.io/BSE_Derin_Portfolio/))
+- [Raspberry Pi Pin Layout]([https://trashytuber.github.io/YimingJiaBlueStamp/](https://www.raspberrypi-spy.co.uk/2012/06/simple-guide-to-the-rpi-gpio-header-and-pins/))
+- [Example Ball-Tracking Robot Project]([https://sviatil0.github.io/Sviatoslav_BSE/](https://deringur.github.io/BSE_Derin_Portfolio/))
