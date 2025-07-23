@@ -38,24 +38,543 @@ Although setting up the Raspberry Pi was smooth at first, when I tried filming t
 # Schematics (Main Project)
 
 # Main Code
-Here's where you'll put your code. The syntax below places it into a block of code. Follow the guide [here]([url](https://www.markdownguide.org/extended-syntax/)) to learn how to customize it to your project needs. 
-
 ```python
-void setup() {
-  // put your setup code here, to run once:
-  Serial.begin(9600);
-  Serial.println("Hello World!");
-}
+import cv2
+import numpy as np
+from picamera2 import Picamera2
+import RPi.GPIO as gpio
+from gpiozero import DistanceSensor
+import time
+ 
+Your_color = "Red"
+pwmA = None
+pwmB = None
+ball_last_seen = None
+stable_ball_counter = 0
+ball_required_stability = 3
 
-void loop() {
-  // put your main code here, to run repeatedly:
+# Define your color range 163,179,121, 255, 111, 255
+my_color_lower = np.array([163, 121, 111], np.uint8)
+my_color_upper = np.array([179, 255, 255], np.uint8)
+gpio.setmode(gpio.BCM)
 
-}
+def init():
+    global pwmA, pwmB
+    # Motor 1
+    gpio.setup(23, gpio.OUT) #IN1
+    gpio.setup(22, gpio.OUT) #IN2
+    gpio.setup(8, gpio.OUT) #EN1
+    # Motor 2
+    gpio.setup(5, gpio.OUT) #IN3
+    gpio.setup(6, gpio.OUT) #IN4
+    gpio.setup(7, gpio.OUT) #EN2
+    #LED
+    gpio.setup(16, gpio.OUT) #RED
+    gpio.setup(20, gpio.OUT) #GREEN
+    gpio.setup(26, gpio.OUT) #BLUE
+   
+    pwmA = gpio.PWM(8, 1000)
+    pwmB = gpio.PWM(7, 1000)
+    pwmA.start(0)
+    pwmB.start(0)
+   
+def light_red():
+    gpio.output(16, True)
+    gpio.output(20, False)
+    gpio.output(26, False)
+   
+def light_green():
+    gpio.output(16, False)
+    gpio.output(20, True)
+    gpio.output(26, False)
+   
+def light_blue():
+    gpio.output(16, False)
+    gpio.output(20, False)
+    gpio.output(26, True)
+
+def move_forward(duration, speed):
+    gpio.output(23, True)
+    gpio.output(22, False)
+    gpio.output(5, False)
+    gpio.output(6, True)
+   
+    pwmA.ChangeDutyCycle(100)
+    pwmB.ChangeDutyCycle(100)
+    time.sleep(0.05)
+    pwmA.ChangeDutyCycle(speed)
+    pwmB.ChangeDutyCycle(speed+7)
+   
+    time.sleep(duration)
+    pwmA.ChangeDutyCycle(0)
+    pwmB.ChangeDutyCycle(0)
+   
+def move_backward(duration, speed):
+    gpio.output(23, False)
+    gpio.output(22, True)
+    gpio.output(5, True)
+    gpio.output(6, False)
+   
+    pwmA.ChangeDutyCycle(100)
+    pwmB.ChangeDutyCycle(100)
+    time.sleep(0.05)
+    pwmA.ChangeDutyCycle(speed)
+    pwmB.ChangeDutyCycle(speed+7)
+   
+    time.sleep(duration)
+    pwmA.ChangeDutyCycle(0)
+    pwmB.ChangeDutyCycle(0)
+
+def rotate_left(duration, speed):
+    gpio.output(23, True)
+    gpio.output(22, False)
+    gpio.output(5, True)
+    gpio.output(6, False)
+   
+    pwmA.ChangeDutyCycle(100)
+    pwmB.ChangeDutyCycle(100)
+    time.sleep(0.05)
+    pwmA.ChangeDutyCycle(speed)
+    pwmB.ChangeDutyCycle(speed)
+   
+    time.sleep(duration)
+    pwmA.ChangeDutyCycle(0)
+    pwmB.ChangeDutyCycle(0)
+   
+def rotate_left_soft(duration):
+    print("rotate_left_soft CALLED")
+    gpio.output(23, True)
+    gpio.output(22, False)
+    gpio.output(5, False)
+    gpio.output(6, False)
+   
+    pwmA.ChangeDutyCycle(100)
+    pwmB.ChangeDutyCycle(100)
+    time.sleep(0.05)
+    pwmA.ChangeDutyCycle(0)
+    pwmB.ChangeDutyCycle(50)
+    time.sleep(duration)
+
+    pwmA.ChangeDutyCycle(0)
+    pwmB.ChangeDutyCycle(0)
+
+def rotate_right(duration, speed):
+    gpio.output(23, False)
+    gpio.output(22, True)
+    gpio.output(5, False)
+    gpio.output(6, True)
+   
+    pwmA.ChangeDutyCycle(100)
+    pwmB.ChangeDutyCycle(100)
+    time.sleep(0.05)
+    pwmA.ChangeDutyCycle(speed)
+    pwmB.ChangeDutyCycle(speed)
+   
+    time.sleep(duration)
+    pwmA.ChangeDutyCycle(0)
+    pwmB.ChangeDutyCycle(0)
+   
+def rotate_right_soft(duration):
+    print("rotate_right_soft CALLED")
+    gpio.output(23, False)
+    gpio.output(22, False)
+    gpio.output(5, False)
+    gpio.output(6, True)
+   
+    pwmA.ChangeDutyCycle(100)
+    pwmB.ChangeDutyCycle(100)
+    time.sleep(0.05)
+    pwmA.ChangeDutyCycle(25)
+    pwmB.ChangeDutyCycle(0)
+   
+    time.sleep(duration)
+    pwmA.ChangeDutyCycle(0)
+    pwmB.ChangeDutyCycle(0)
+   
+def stop():
+    gpio.output(23, False)
+    gpio.output(22, False)
+    gpio.output(5, False)
+    gpio.output(6, False)
+    pwmA.ChangeDutyCycle(0)
+    pwmB.ChangeDutyCycle(0)
+   
+def is_ball_centered(ball_x, frame_width, tolerance = 30):
+    center_x = frame_width//2
+    return abs(ball_x-center_x) < tolerance
+
+def set_motor_speed(left_speed, right_speed):
+    if left_speed >= 0:
+        gpio.output(23, True)
+        gpio.output(22, False)
+    else:
+        gpio.output(23, False)
+        gpio.output(22, True)
+    pwmA.ChangeDutyCycle(abs(left_speed))
+
+    if right_speed >= 0:
+        gpio.output(5, False)
+        gpio.output(6, True)
+    else:
+        gpio.output(5, True)
+        gpio.output(6, False)
+    pwmB.ChangeDutyCycle(abs(right_speed))
+
+def smooth_steering(ball_x, frame_width):
+    center_x = frame_width // 2
+    offset = ball_x - center_x
+    tolerance = 30
+    max_speed = 60
+    min_speed = 30
+    if abs(offset) < tolerance:
+        left_speed = right_speed = max_speed
+    else:
+        steering_factor = offset / center_x
+        steering_factor = max(min(steering_factor, 1), -1)
+
+        if steering_factor > 0:
+            right_speed = max_speed * (1 - abs(steering_factor) * 0.5)
+            left_speed = max_speed
+        else:
+            left_speed = max_speed * (1 - abs(steering_factor) * 0.5)
+            right_speed = max_speed
+
+    set_motor_speed(left_speed, right_speed)
+
+def search_for_ball(timeout=10, min_area=100000):
+    start_time = time.time()
+    direction = -1 if ball_last_seen == "left" else 1
+    while time.time() - start_time < timeout:
+        if direction == -1:
+            rotate_left_soft(0.15)
+        else:
+            rotate_right_soft(0.15)
+        im = picam2.capture_array()
+        hsvFrame = cv2.cvtColor(im, cv2.COLOR_BGR2HSV)
+        color_mask = cv2.inRange(hsvFrame, my_color_lower, my_color_upper)
+        contours, _ = cv2.findContours(color_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+        if contours:
+            largest = max(contours, key=cv2.contourArea)
+            area = cv2.contourArea(largest)
+
+            if area >= min_area:
+                print("Ball found during search!")
+                return True
+    return False
+
+# Initialize PiCamera
+init()
+picam2 = Picamera2()
+picam2.preview_configuration.main.size = (1280, 720)
+picam2.preview_configuration.main.format = "RGB888"
+picam2.preview_configuration.align()
+picam2.configure("preview")
+picam2.start()
+ultrasonic = DistanceSensor(echo = 17, trigger = 10)
+
+while True:
+    im = picam2.capture_array()
+    hsvFrame = cv2.cvtColor(im, cv2.COLOR_BGR2HSV)
+    color_mask = cv2.inRange(hsvFrame, my_color_lower, my_color_upper)
+    contours, _ = cv2.findContours(color_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    if contours:
+        light_blue()
+        largest = max(contours, key=cv2.contourArea)
+        area = cv2.contourArea(largest)
+        if area > 120000:
+            stable_ball_counter = 0
+            x,y,w,h = cv2.boundingRect(largest)
+            ball_x = x+w//2
+            frame_center = im.shape[1]//2      
+            offset = ball_x - frame_center
+            print(f"Offset: {offset}, ball_last_seen set to: {ball_last_seen}")
+            if abs(offset) < 40:
+                ball_last_seen = "center"
+            elif offset < 0:
+                ball_last_seen = "left"
+            else:
+                ball_last_seen = "right"
+               
+            print("Ball found")
+           
+            if is_ball_centered(ball_x, im.shape[1]):
+                print("Ball centered")
+                if cv2.countNonZero(color_mask) < 150000 and ultrasonic.distance > 0.1:
+                    light_blue()
+                    move_forward(0.2, 55)
+                    print("Approaching ball")
+                else:
+                    stop()
+                    light_green()
+                    print("Parked in front of ball")
+            else:
+                light_blue()
+                smooth_steering(ball_x, im.shape[1])
+                print(f"Ball off-center, smoothly steering {ball_last_seen}")
+            cv2.rectangle(im, (x, y), (x + w, y + h), (0, 255, 0), 3)
+            cv2.line(im, (frame_center, 0), (frame_center, im.shape[0]), (255, 0, 0), 2)
+            cv2.circle(im, (ball_x, y + h // 2), 10, (0, 0, 255), -1)
+            
+            cv2.putText(im, f"Offset: {offset}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2)
+            cv2.putText(im, f"Last seen: {ball_last_seen}", (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2)
+            cv2.putText(im, f"Distance: {ultrasonic.distance:.2f}m", (10, 90), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2)
+        else:
+            light_red()
+            print("Contour too small, ignoring")
+            stable_ball_counter += 1
+            if stable_ball_counter > 5:
+                ball_last_seen = None
+                print("Clearing ball_last_seen due to instability")
+            found = search_for_ball()
+
+    else:
+        light_red()
+        print(f"[DEBUG] ball_last_seen = {ball_last_seen}")
+        if ball_last_seen == "left":
+            print("Main: ball_last_seen = left ? calling rotate_left_soft")
+            rotate_left_soft(0.3)
+            print("Ball lost, rotating left to reacquire")
+        elif ball_last_seen == "right":
+            rotate_right_soft(0.3)
+            print("Ball lost, rotating right to reacquire")
+        elif ball_last_seen == "center":
+            rotate_right_soft(0.2)
+            print("Ball was centered but now lost")
+        else:
+            print("Ball completely lost. Running search...")
+            found = search_for_ball()
+            if found:
+                light_blue()
+                print("Ball reacquired. Returning to tracking...")
+            else:
+                stop()
+                print("Ball not found after search. Waiting or retrying...")
+                time.sleep(0.5)
+
+    display = im.copy()
+    text_color = (255, 255, 255)
+    cv2.putText(display, f"Ball Last Seen: {ball_last_seen}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, text_color, 2)
+    cv2.putText(display, f"Ultrasonic: {ultrasonic.distance:.2f}m", (10, 70), cv2.FONT_HERSHEY_SIMPLEX, 1, text_color, 2)
+                
+    cv2.imshow("PiCam View", im)
+
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        picam2.stop()
+        cv2.destroyAllWindows()
+        break
+'''
+while True:
+    im = picam2.capture_array()
+    hsvFrame = cv2.cvtColor(im, cv2.COLOR_BGR2HSV)
+    color_mask = cv2.inRange(hsvFrame, my_color_lower, my_color_upper)
+    contours, _ = cv2.findContours(color_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    print("Color pixels:", cv2.countNonZero(color_mask))
+    print("Ultrasonic distance:", ultrasonic.distance)
+   
+# Start a while loop
+while True:
+    im = picam2.capture_array()
+    hsvFrame = cv2.cvtColor(im, cv2.COLOR_BGR2HSV)
+    color_mask = cv2.inRange(hsvFrame, my_color_lower, my_color_upper)
+    color_pixel_count = cv2.countNonZero(color_mask)
+    #result_frame = detect_single_color(im, Your_color, my_color_lower, my_color_upper, (0, 255, 0))
+    #cv2.imshow("Single Color Detection in Real-Time", result_frame)
+    #print("Matching color pixels:", color_pixel_count)
+    if cv2.waitKey(10) & 0xFF == ord('q'):
+        picam2.stop()
+        cv2.destroyAllWindows()
+        break
+'''
 ```
 
-# LED strip code
+# LED Strip Code
 
 ```python
+# sudo ~/ball_tracking_robot/venv/bin/python /home/dreouk/Documents/Led_test.py
+import board
+import neopixel
+import RPi.GPIO as GPIO
+import time
+
+# Pin setup
+LDR_PIN = 21
+LED_PIN = board.D18
+NUM_PIXELS = 5
+
+pixels = neopixel.NeoPixel(LED_PIN, NUM_PIXELS, auto_write=False)
+
+GPIO.setmode(GPIO.BCM)
+
+def rc_time(pin):
+    count = 0
+
+    GPIO.setup(pin, GPIO.OUT)
+    GPIO.output(pin, False)
+    time.sleep(0.1)
+
+    GPIO.setup(pin, GPIO.IN)
+    while GPIO.input(pin) == 0:
+        count += 1
+        if count > 10000:
+            break
+
+    return count
+
+try:
+    while True:
+        light_level = rc_time(LDR_PIN)
+        print("Light level:", light_level)
+
+        threshold = 45  
+
+        if light_level > threshold:
+            pixels.fill((255, 255, 255))
+            pixels.show()
+        else:
+            pixels.fill((0, 0, 0))
+            pixels.show()
+
+        time.sleep(0.2)
+
+except KeyboardInterrupt:
+    print("Exiting program")
+
+finally:
+    pixels.fill((0, 0, 0))
+    pixels.show()
+    GPIO.cleanup()
+```
+
+# Color Calibration Code
+
+```python
+import cv2
+import numpy as np
+
+def empty(a):
+  pass
+
+def stackImages(scale,imgArray):
+  rows = len(imgArray)
+  cols = len(imgArray[0])
+  rowsAvailable = isinstance(imgArray[0], list)
+  width = imgArray[0][0].shape[1]
+  height = imgArray[0][0].shape[0]
+  if rowsAvailable:
+      for x in range ( 0, rows):
+          for y in range(0, cols):
+              if imgArray[x][y].shape[:2] == imgArray[0][0].shape [:2]:
+                  imgArray[x][y] = cv2.resize(imgArray[x][y], (0, 0), None, scale, scale)
+              else:
+                  imgArray[x][y] = cv2.resize(imgArray[x][y], (imgArray[0][0].shape[1], imgArray[0][0].shape[0]), None, scale, scale)
+              if len(imgArray[x][y].shape) == 2: imgArray[x][y]= cv2.cvtColor( imgArray[x][y], cv2.COLOR_GRAY2BGR)
+      imageBlank = np.zeros((height, width, 3), np.uint8)
+      hor = [imageBlank]*rows
+      hor_con = [imageBlank]*rows
+      for x in range(0, rows):
+          hor[x] = np.hstack(imgArray[x])
+      ver = np.vstack(hor)
+  else:
+      for x in range(0, rows):
+          if imgArray[x].shape[:2] == imgArray[0].shape[:2]:
+              imgArray[x] = cv2.resize(imgArray[x], (0, 0), None, scale, scale)
+          else:
+              imgArray[x] = cv2.resize(imgArray[x], (imgArray[0].shape[1], imgArray[0].shape[0]), None,scale, scale)
+          if len(imgArray[x].shape) == 2: imgArray[x] = cv2.cvtColor(imgArray[x], cv2.COLOR_GRAY2BGR)
+      hor= np.hstack(imgArray)
+      ver = hor
+  return ver
+
+
+
+path = 'captured_image.jpg'
+cv2.namedWindow("TrackBars")
+cv2.resizeWindow("TrackBars",640,240)
+cv2.createTrackbar("Hue Min","TrackBars",0,179,empty)
+cv2.createTrackbar("Hue Max","TrackBars",19,179,empty)
+cv2.createTrackbar("Sat Min","TrackBars",110,255,empty)
+cv2.createTrackbar("Sat Max","TrackBars",240,255,empty)
+cv2.createTrackbar("Val Min","TrackBars",153,255,empty)
+cv2.createTrackbar("Val Max","TrackBars",255,255,empty)
+
+while True:
+  img = cv2.imread(path)
+  img= cv2.resize(img, (300, 300))
+  imgHSV = cv2.cvtColor(img,cv2.COLOR_BGR2HSV)
+  h_min = cv2.getTrackbarPos("Hue Min","TrackBars")
+  h_max = cv2.getTrackbarPos("Hue Max", "TrackBars")
+  s_min = cv2.getTrackbarPos("Sat Min", "TrackBars")
+  s_max = cv2.getTrackbarPos("Sat Max", "TrackBars")
+  v_min = cv2.getTrackbarPos("Val Min", "TrackBars")
+  v_max = cv2.getTrackbarPos("Val Max", "TrackBars")
+  print(h_min,h_max,s_min,s_max,v_min,v_max)
+  lower = np.array([h_min,s_min,v_min])
+  upper = np.array([h_max,s_max,v_max])
+  mask = cv2.inRange(imgHSV,lower,upper)
+  imgResult = cv2.bitwise_and(img,img,mask=mask)
+
+
+  cv2.imshow("Original",img)
+  cv2.imshow("HSV",imgHSV)
+  cv2.imshow("Mask", mask)
+  cv2.imshow("Result", imgResult)
+
+  #imgStack = stackImages(0.6,([img,imgHSV],[mask,imgResult]))
+  #cv2.imshow("Stacked Images", imgStack)
+
+  cv2.waitKey(1)
+```
+
+# Motor Test Code
+
+```python
+# Motor test
+import RPi.GPIO as gpio
+from gpiozero import DistanceSensor
+import time
+gpio.setmode(gpio.BCM)
+pwmA = None
+pwmB = None
+
+def init():
+    # Motor 1
+    gpio.setup(23, gpio.OUT) #IN1
+    gpio.setup(22, gpio.OUT) #IN2
+    gpio.setup(8, gpio.OUT) #EN1
+    # Motor 2
+    gpio.setup(5, gpio.OUT) #IN3
+    gpio.setup(6, gpio.OUT) #IN4
+    gpio.setup(7, gpio.OUT) #EN2
+
+
+def move_forward(duration):
+    gpio.output(8, True)
+    gpio.output(7, True)
+    gpio.output(23, True)
+    gpio.output(22, False)
+    gpio.output(5, False)
+    gpio.output(6, True)
+    time.sleep(duration)
+    
+def move_backward(duration):
+    gpio.output(8, True)
+    gpio.output(7, True)
+    gpio.output(23, False)
+    gpio.output(22, True)
+    gpio.output(5, True)
+    gpio.output(6, False)
+    time.sleep(duration)
+    
+init()
+print("Moving forward")
+move_forward(1)
+gpio.cleanup()
+#Ultrasonic
+#ultrasonic = DistanceSensor(echo = 17, trigger = 10)
+#while True:
+    #print(ultrasonic.distance)
+
 ```
 
 # Bill of Materials (Main Project)
