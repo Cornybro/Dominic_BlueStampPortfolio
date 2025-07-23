@@ -39,7 +39,7 @@ Although setting up the Raspberry Pi was smooth at first, when I tried filming t
 
 # Schematics (Main Project)
 
-# Code
+# Main Code
 Here's where you'll put your code. The syntax below places it into a block of code. Follow the guide [here]([url](https://www.markdownguide.org/extended-syntax/)) to learn how to customize it to your project needs. 
 
 ```python
@@ -54,7 +54,11 @@ void loop() {
 
 }
 ```
--->
+
+# LED strip code
+
+```python
+```
 
 # Bill of Materials (Main Project)
 
