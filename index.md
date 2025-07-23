@@ -617,8 +617,6 @@ Don't forget to place the link of where to buy each component inside the quotati
 | Battery Case | Allows for batteries to be placed in and provide long-term power | $7 | <a href="[https://www.amazon.com/Arduino-A000066-ARDUINO-UNO-R3/dp/B008GRTSV6/](https://www.amazon.com/Battery-Holder-Barrel-Connector-Arduino/dp/B07T65WWCR/ref=sr_1_1?crid=1OYXN0JTMLBQ1&dib=eyJ2IjoiMSJ9.ghtrwrmtGzNZNMN4_tCMJiIaiC29HwmDKl2OB7D2rZWC4ziKD6XJnm1cpNA6pR21hdaTsmF7jr1qq8MQtj129bHnusbMBy7K8ggKaApevF0gcZGxNB6PfzNw3ICqhJ9dht_CNasG6ROTdpBxEhHUmoqCFWxbwhDnkzqjwVbR1SqJ0q7looK4T22CQ0xGjpDxz5-kojyVjiuJrNXw4-KqgwGc4txp1LMnk9MB4CR0nAQ.4Pq7-z8RyRvipV96QvhQPgZDZtMUKh_YOreMBiFtCfM&dib_tag=se&keywords=arduino+battery+case&qid=1752795059&s=industrial&sprefix=arduino+battery+cas%2Cindustrial%2C123&sr=1-1)"> Link </a> |
 | Acrylic shell | Allows for device to be more wieldy | $10 | <a href="[https://www.amazon.com/Arduino-A000066-ARDUINO-UNO-R3/dp/B008GRTSV6/](https://www.amazon.com/SunFounder-Transparent-Compatible-Original-Included/dp/B0CGDTD5PJ/ref=sr_1_3?crid=288PH8MAWLA9M&dib=eyJ2IjoiMSJ9.n0BJ_rb3yZ0sHqcY7KsFTNb4Sxyn6906z4y52jSf_GpUkV90aelkNJys4U9PWc6jkSLuls7eHEjk9Sq2z8e25bMVabogobhV5hpZ1QiNdNnYMF76B8r6CLC9pqQ-vJBPSjzFkCzTKXQ2pIMdd_i18zCw8zX6Gwr8nknWOvIIG29hWqJKvAM8dzPKbvtKXkFjwE-MzRvVX246ZRmHn4ilbHNdofGX5pYZFA0cXB3byu8.e9o5mTvvtq0UR2M51Np-ozBihJJP_Qw_xsTAz5sgE1U&dib_tag=se&keywords=acrylic+shell+arduino&qid=1752795114&sprefix=acrylic+shell+arduino%2Caps%2C121&sr=8-3)"> Link </a> |
 
-<!--# Other Resources/Examples
-One of the best parts about Github is that you can view how other people set up their own work. Here are some past BSE portfolios that are awesome examples. You can view how they set up their portfolio, and you can view their index.md files to understand how they implemented different portfolio components.
-- [Example 1](https://trashytuber.github.io/YimingJiaBlueStamp/)
-- [Example 2](https://sviatil0.github.io/Sviatoslav_BSE/)
-- [Example 3](https://arneshkumar.github.io/arneshbluestamp/)-->
+# Other Resources/Examples
+- [Resource 1]([https://trashytuber.github.io/YimingJiaBlueStamp/](https://www.raspberrypi-spy.co.uk/2012/06/simple-guide-to-the-rpi-gpio-header-and-pins/))
+- [Resource 2]([https://sviatil0.github.io/Sviatoslav_BSE/](https://deringur.github.io/BSE_Derin_Portfolio/))
