@@ -579,25 +579,6 @@ gpio.cleanup()
 
 # Bill of Materials (Main Project)
 
-# Retro Arcade Gaming Console
-
-<img src = "DominicR.jpg" width = "450" height = "600">
-
-<iframe width="560" height="315" src="https://www.youtube.com/embed/cbm1Ko4pPN8?si=BsYM3Q0l8w3hW4iN" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-My project was the Retro Arcade Gaming Console. It came with a PCB with all the software already installed, and what I had to do was solder all the components onto the board and hook up a battery pack to power it. One challenge I faced was that I accidentally bridged the capacitor when soldering it, and I had to use desoldering wick and soldering paste to remove the solder so I could redo the solder connection. I'm excited to continue on to the intensive project, where I will be creating a ball-tracking robot.
-
-# Schematics (Starter Project)
-<!--
-Here's where you'll put images of your schematics. [Tinkercad](https://www.tinkercad.com/blog/official-guide-to-tinkercad-circuits) and [Fritzing](https://fritzing.org/learning/) are both great resoruces to create professional schematic diagrams, though BSE recommends Tinkercad becuase it can be done easily and for free in the browser. 
--->
-![Headstone Image](schematics-_WNfuLqZO8t.jpg)
-
-# Bill of Materials (Starter Project)
-
-Here's where you'll list the parts in your project. To add more rows, just copy and paste the example rows below.
-Don't forget to place the link of where to buy each component inside the quotation marks in the corresponding row after href =. Follow the guide [here]([url](https://www.markdownguide.org/extended-syntax/)) to learn how to customize this to your project needs. 
--->
-
 | **Part** | **Note** | **Price** | **Link** |
 |:--:|:--:|:--:|:--:|
 | Buzzer | Make sounds to provide enhanced experience | $7 | <a href="[https://www.amazon.com/Arduino-A000066-ARDUINO-UNO-R3/dp/B008GRTSV6/](https://www.amazon.com/Gikfun-Terminals-Passive-Electronic-Arduino/dp/B01GJLE5BS/ref=sr_1_1_sspa?crid=2QM1MJDNNAQCA&dib=eyJ2IjoiMSJ9.OyPyJJ4xtWru7f8xcsfDi7R03NiW0MPkZStq2OCgkR1o4VGlFrUNNqNTzJyiVZVdk_wUMmt6O_38yzxecOcAzyz_rCYUsdSXR1avywEMk8IU9K3ojIEHaW-YDrSIzRR-a-ALkkqQhkfI9C70N65oew-bd2T9sxWGmhJpcucFmK3Y6noTTw-8Tjh_4tLth_U9hI3mRgBnSTtbLmFUdyJqIItVViPqW00ZtYBzmg2n7mU._n9TNI6lrWkczy6P113YSB7VdYavuhuaU-rBRfkV__E&dib_tag=se&keywords=arduino+buzzer&qid=1752793393&sprefix=arduino+buzze%2Caps%2C132&sr=8-1-spons&sp_csd=d2lkZ2V0TmFtZT1zcF9hdGY&psc=1)"> Link </a> |
@@ -616,6 +597,25 @@ Don't forget to place the link of where to buy each component inside the quotati
 | Column | Acts as standoff between PCB and acrylic shell | $0.30 | <a href="[https://www.amazon.com/Arduino-A000066-ARDUINO-UNO-R3/dp/B008GRTSV6/](https://www.amazon.com/Csdtylh-Male-Female-Standoff-Stainless-Assortment/dp/B06Y5TJXY1/ref=sr_1_2?crid=3NU4Q8QHEIBNY&dib=eyJ2IjoiMSJ9.SROPdtLRZ0wppidkVVHZbAy1Lqsyy7BDI3O1XRygzX06JOdLomeO6nn9j8nJkPkeWWP3bZEF4WcxFbcQ26u8ulTkPJiv3xYMv3mUmF4MIR9kF55mwA29Z4w6ys1Q76HHyNhah3vMNzhIMhZyO980zg4s3BcJRHUNFXIhGU7opYC9Kaf6lIIA8xbJaJCNsX4ATW2CgkX1XWOd4P4-L10o7ln18ZUh4dHF0bIOLuhnG4uMmYqV_HmtPXR6bKONafNsu_oUxyNT4-EgibB-UvkECkMyyd-hzuIYbfvvKfHYbj4.dXo8Fa7RkMtwFUG9Ih_G9P-IEiW1tX1bTvvCgsC-fu8&dib_tag=se&keywords=arduino%2Bmetal%2Bstandoff&qid=1752795037&s=industrial&sprefix=arduino%2Bmetal%2Bstandof%2Cindustrial%2C129&sr=1-2&th=1)"> Link </a> |
 | Battery Case | Allows for batteries to be placed in and provide long-term power | $7 | <a href="[https://www.amazon.com/Arduino-A000066-ARDUINO-UNO-R3/dp/B008GRTSV6/](https://www.amazon.com/Battery-Holder-Barrel-Connector-Arduino/dp/B07T65WWCR/ref=sr_1_1?crid=1OYXN0JTMLBQ1&dib=eyJ2IjoiMSJ9.ghtrwrmtGzNZNMN4_tCMJiIaiC29HwmDKl2OB7D2rZWC4ziKD6XJnm1cpNA6pR21hdaTsmF7jr1qq8MQtj129bHnusbMBy7K8ggKaApevF0gcZGxNB6PfzNw3ICqhJ9dht_CNasG6ROTdpBxEhHUmoqCFWxbwhDnkzqjwVbR1SqJ0q7looK4T22CQ0xGjpDxz5-kojyVjiuJrNXw4-KqgwGc4txp1LMnk9MB4CR0nAQ.4Pq7-z8RyRvipV96QvhQPgZDZtMUKh_YOreMBiFtCfM&dib_tag=se&keywords=arduino+battery+case&qid=1752795059&s=industrial&sprefix=arduino+battery+cas%2Cindustrial%2C123&sr=1-1)"> Link </a> |
 | Acrylic shell | Allows for device to be more wieldy | $10 | <a href="[https://www.amazon.com/Arduino-A000066-ARDUINO-UNO-R3/dp/B008GRTSV6/](https://www.amazon.com/SunFounder-Transparent-Compatible-Original-Included/dp/B0CGDTD5PJ/ref=sr_1_3?crid=288PH8MAWLA9M&dib=eyJ2IjoiMSJ9.n0BJ_rb3yZ0sHqcY7KsFTNb4Sxyn6906z4y52jSf_GpUkV90aelkNJys4U9PWc6jkSLuls7eHEjk9Sq2z8e25bMVabogobhV5hpZ1QiNdNnYMF76B8r6CLC9pqQ-vJBPSjzFkCzTKXQ2pIMdd_i18zCw8zX6Gwr8nknWOvIIG29hWqJKvAM8dzPKbvtKXkFjwE-MzRvVX246ZRmHn4ilbHNdofGX5pYZFA0cXB3byu8.e9o5mTvvtq0UR2M51Np-ozBihJJP_Qw_xsTAz5sgE1U&dib_tag=se&keywords=acrylic+shell+arduino&qid=1752795114&sprefix=acrylic+shell+arduino%2Caps%2C121&sr=8-3)"> Link </a> |
+
+# Retro Arcade Gaming Console Starter Project
+
+<img src = "DominicR.jpg" width = "450" height = "600">
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/cbm1Ko4pPN8?si=BsYM3Q0l8w3hW4iN" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+My project was the Retro Arcade Gaming Console. It came with a PCB with all the software already installed, and what I had to do was solder all the components onto the board and hook up a battery pack to power it. One challenge I faced was that I accidentally bridged the capacitor when soldering it, and I had to use desoldering wick and soldering paste to remove the solder so I could redo the solder connection. I'm excited to continue on to the intensive project, where I will be creating a ball-tracking robot.
+
+# Starter Project Kit
+
+| **Part** | **Note** | **Price** | **Link** |
+|:--:|:--:|:--:|:--:|
+| Vogurtime DIY Solder Project Game Kit | Used this kit and followed its instructions to create starter project | $18.99 | <a href="(https://www.amazon.com/Soldering-ElectronicsPracticing-Learning-Comfortable-VOGURTIME/dp/B094QRRHC2?th=1)"> Link </a> |
+
+# Schematics (Starter Project)
+<!--
+Here's where you'll put images of your schematics. [Tinkercad](https://www.tinkercad.com/blog/official-guide-to-tinkercad-circuits) and [Fritzing](https://fritzing.org/learning/) are both great resoruces to create professional schematic diagrams, though BSE recommends Tinkercad becuase it can be done easily and for free in the browser. 
+-->
+![Headstone Image](schematics-_WNfuLqZO8t.jpg)
 
 # Other Resources/Examples
 - [Raspberry Pi Pin Layout]([https://trashytuber.github.io/YimingJiaBlueStamp/](https://www.raspberrypi-spy.co.uk/2012/06/simple-guide-to-the-rpi-gpio-header-and-pins/))
