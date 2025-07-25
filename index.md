@@ -1,6 +1,6 @@
 # Ball Tracking Robot Using Computer Vision
 
-My project is a ball-tracking robot that implements two fundamental sensors, the ultrasonic sensor and the PiCamera, to detect the ball's color and park in front of it. It runs on a Raspberry Pi 4, which is a microcomputer, and uses OpenCV, a computer vision library for the PiCamera that allows you to create color masks for any object. It also uses the ultrasonic sensor that sends out soundwaves and measures the time it takes for them to return to determine the distance an object is from the sensor.
+My project is a ball-tracking robot that implements two fundamental sensors, the ultrasonic sensor and the PiCamera, to detect the ball's color and park in front of it. It runs on a Raspberry Pi 4, which is a microcomputer, and uses OpenCV, a computer vision library for the PiCamera that allows you to create color masks for any object. It also utilizes an ultrasonic sensor that emits soundwaves and measures the time it takes for them to return, determining the distance of an object from the sensor.
 
 | **Engineer** | **School** | **Area of Interest** | **Grade** |
 |:--:|:--:|:--:|:--:|
