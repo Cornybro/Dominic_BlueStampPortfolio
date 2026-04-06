@@ -14,6 +14,8 @@ My project is a ball-tracking robot that implements two fundamental sensors, the
 From my second milestone, I've gone through an iterative process of reorienting parts around the chassis and coding basic logic for the robot to track the ball. I reoriented my breadboard and battery pack following the addition of the portable charger, which allows the robot to become wireless and ready for testing, and I also went through multiple orientations for the ultrasonic sensor and PiCamera. I learned how to use Pulse Width Modulation, a function to help control the speed of DC Motors, to my advantage so that the robot could turn at a slower speed to more effectively find the ball. Once my hardware was settled, I started coding some basic logic, but was stuck at turning the various ideas I had into effective code. As a result, I used the help of ChatGPT to make substantial changes, which allowed my robot to unlock smart/smooth steering and detect the ball more frequently. A few key topics I learned about during my time at BSE were soldering, breadboard connections, the power equation, Ohm's Law, PWM, and the oscilloscope. I understood different solder joints and which onces to avoid, how the underside of a breadboard looks like and how to use one effecetively, how to calculate the necessary resistance for a project using the voltage divider equation (V_out = V_in * (R2 / (R1 + R2))), how Ohm's Law (V = IR) ties into my project, how to use PWM to control the speed of DC Motors, and the usefulness of an oscilloscope for visualizing connections. After everything I've learned at BSE, I hope to use my knowledge in soldering and breadboard connections for competition projects within school clubs, and I hope to understand at a deeper level how to use the power equation and Ohm's Law in complex electrical projects.
 # Challenges
 One minor challenge I encountered was deciding what orientation of the PiCamera and ultrasonic sensor I would use. I went through multiple orientations, which involved assembling and subsequently disassembling the PiCamera Mount, since its angle made ball detection difficult. I ended up taking two ultrasonic mounts and using double-sided tape to fix the two objects in optimal positions for detection. One major challenge I had was that one of my motors suddenly stopped working one day, so I learned how to use an oscilloscope so I could identify the problem, which was that I was misusing PWM due to my primitive understanding of the function at the time.
+# Reflection
+Reflecting back on the project, I would have invested more time in understanding PWM before integrating it into the project, since my superficial understanding of it early on caused a motor to fail and cost me time that I had to spend on debugging. I also would have planned my sensor and camera orientations more deliberately from the start, rather than going through multiple iteration cycles on assembly. If I were to continue this project, I would explore fully incorporate the LED strip code to add night vision, and I would finish designing a 3D printed shell for the robot. Overall, this project gave me a strong foundation in computer vision, embedded systems, and iterative hardware design that I plan to build on in future engineering projects.
 
 # Second Milestone: Setting up Hardware and Electrical Connections
 
@@ -388,7 +390,7 @@ while True:
 '''
 ```
 
-# LED Strip Code
+# LED Strip Code (Modifications)
 
 ```python
 # sudo ~/ball_tracking_robot/venv/bin/python /home/dreouk/Documents/Led_test.py
