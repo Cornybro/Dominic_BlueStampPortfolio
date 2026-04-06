@@ -38,6 +38,7 @@ My project is a ball-tracking robot, which means that it needs some way to recei
 Although setting up the Raspberry Pi was smooth at first, when I tried filming the first milestone video, the SSH Key failed, and from then on, it hasn't shown sign of being reestablished. However, I plan to solve this problem by directly coding on the Raspberry Pi using a software called OBS Capture instead of connecting to the Pi and coding it remotely. This software uses an HDMI cable to visualize the Pi as a computer on your laptop screen. The instructors are also talking of creating a new WiFi network for each classroom that allows SSH Key connections since the school WiFi has restrictions on these connections.
 
 # Schematics (Main Project)
+![Headstone Image](schematic.jpg)
 
 # Main Code
 ```python
